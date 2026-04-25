@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_style %}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.scard{background:var(--card);border:1px solid var(--b);border-radius:14px;padding:18px;display:flex;align-items:center;gap:14px}
+.s-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.s-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:1px;line-height:1}
+.s-lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.apps-list{display:flex;flex-direction:column;gap:12px}
+.app-row{background:var(--card);border:1px solid var(--b);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:16px}
+.app-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.app-inf{flex:1}.app-nm{font-weight:600;font-size:.9rem}.app-fc{font-size:.78rem;color:var(--muted);margin-top:2px}
+.app-acts{display:flex;gap:8px}
+.btn-sm{padding:7px 13px;font-size:.75rem;border-radius:7px}
+.btn-sec{background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);color:var(--cyan)}
+.lbl{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:3px;color:var(--muted);margin-bottom:14px}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}}
+{% endblock %}
+
+{% block body %}
+<div class="topbar">
+  <h1>Dashboard</h1>
+  <a href="/admin/upload" class="btn btn-primary">⬆ Novo Ficheiro</a>
+</div>
+<div class="content">
+  <div class="stats">
+    <div class="scard">
+      <div class="s-icon" style="background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.2)">📁</div>
+      <div><div class="s-val" style="color:var(--cyan)">{{ total_files }}</div><div class="s-lbl">Ficheiros</div></div>
+    </div>
+    <div class="scard">
+      <div class="s-icon" style="background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2)">⬇</div>
+      <div><div class="s-val" style="color:var(--green)">{{ total_dl }}</div><div class="s-lbl">Downloads</div></div>
+    </div>
+    <div class="scard">
+      <div class="s-icon" style="background:rgba(189,95,255,.1);border:1px solid rgba(189,95,255,.2)">📱</div>
+      <div><div class="s-val" style="color:var(--purple)">{{ apps|length }}</div><div class="s-lbl">Apps VPN</div></div>
+    </div>
+  </div>
+  <div class="lbl">Apps VPN</div>
+  <div class="apps-list">
+    {% for a in apps %}
+    <div class="app-row">
+      <div class="app-icon" style="background:color-mix(in srgb,{{ a.color }} 10%,transparent);border:1px solid color-mix(in srgb,{{ a.color }} 20%,transparent)">{{ a.icon }}</div>
+      <div class="app-inf">
+        <div class="app-nm">{{ a.name }}</div>
+        <div class="app-fc">{{ counts[a.id] }}/5 ficheiros carregados</div>
+      </div>
+      <div class="app-acts">
+        <a href="/admin/upload?app={{ a.id }}" class="btn btn-sm btn-primary">⬆ Upload</a>
+        <a href="/admin/files?app={{ a.id }}"  class="btn btn-sm btn-sec">📁 Ver</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
